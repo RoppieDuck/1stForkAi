@@ -19,12 +19,10 @@ class ProjectManager:
             json.dump(self.projects, f, indent=4)
 
     def add_project(self, name):
-        # Validatie: naam mag niet leeg zijn
         if not name.strip():
             print("Projectnaam mag niet leeg zijn")
             return
 
-        # Validatie: naam moet uniek zijn
         if any(p["name"].lower() == name.lower() for p in self.projects):
             print(f"Project '{name}' bestaat al")
             return
@@ -47,7 +45,6 @@ class ProjectManager:
         for p in self.projects:
             project_name = p["name"]
 
-            # Taken voor dit project ophalen
             project_tasks = [
                 t for t in task_manager.tasks
                 if t["project"].lower() == project_name.lower()
@@ -57,7 +54,6 @@ class ProjectManager:
             done = len([t for t in project_tasks if t["status"] == "afgerond"])
             open_tasks = total - done
 
-            # Status bepalen
             if total == 0:
                 status = "Geen taken"
             elif done == total:
@@ -69,3 +65,40 @@ class ProjectManager:
             print(f"  Status: {status}")
             print(f"  Taken totaal: {total}")
             print(f"  Open: {open_tasks}, Afgerond: {done}\n")
+
+    # NIEUW: project_stats methode
+    def project_stats(self, project_name):
+        from Task_manager import TaskManager
+        task_manager = TaskManager()
+
+        if not any(p["name"].lower() == project_name.lower() for p in self.projects):
+            print(f"Project '{project_name}' bestaat niet")
+            return
+
+        project_tasks = [
+            t for t in task_manager.tasks
+            if t["project"].lower() == project_name.lower()
+        ]
+
+        total = len(project_tasks)
+        if total == 0:
+            print(f"\n{project_name}")
+            print("  → Geen taken\n")
+            return
+
+        counts = {"open": 0, "bezig": 0, "afgerond": 0}
+
+        for t in project_tasks:
+            s = t["status"].lower()
+            counts[s if s in counts else "open"] += 1
+
+        done = counts["afgerond"]
+        perc = (done / total * 100) if total else 0
+
+        print(f"\nStatistieken: {project_name}")
+        print(f"  Totaal:      {total}")
+        print(f"  Open:        {counts['open']}")
+        print(f"  Bezig:       {counts['bezig']}")
+        print(f"  Afgerond:    {done}")
+        print(f"  Afgerond %:  {perc:.1f}%")
+        print()

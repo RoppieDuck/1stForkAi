@@ -14,6 +14,9 @@ def main():
     elif args.command == "list_projects":
         project_manager.list_projects()
 
+    elif args.command == "project_stats":
+        project_manager.project_stats(args.project)
+
     elif args.command == "add_task":
         task_manager.add_task(
             args.project,
@@ -30,6 +33,9 @@ def main():
 
     elif args.command == "remove_task":
         task_manager.remove_task(args.id)
+
+    elif args.command == "search":
+        task_manager.search(args.zoekterm)
 
 if __name__ == "__main__":
     main()
