@@ -11,5 +11,7 @@ class Task:
     id: int
     project: str
     title: str
-    done: bool = False
+    description: str
+    priority: str       # bijv. "laag", "medium", "hoog"
+    status: str = "open"  # open, bezig, afgerond
     created_at: str = datetime.now().isoformat()
